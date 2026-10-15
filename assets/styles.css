@@ -38,14 +38,17 @@ body:has(dialog[open]){overflow:hidden}dialog{padding:0;color:var(--ink);backgro
 .library-table{min-width:730px}
 .library-table .name-col{width:36%}.library-table .abbr-col{width:14%}.library-table .units-col{width:20%}.library-table .tier-col{width:24%}
 .abbreviation{font-size:12px;overflow-wrap:anywhere}.abbreviation-cell{color:#395443}
-.variable-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;list-style:none;padding:0;margin:12px 0 0}
-.variable-tile{display:flex;flex-direction:column;min-width:0;padding:20px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.variable-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;list-style:none;padding:0;margin:12px 0 0}
+.variable-tile{display:flex;flex-direction:column;min-width:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff}
 .variable-tile.selected{border-color:#bfd3c4;background:#f6faf6}
-.tile-heading{display:flex;gap:12px;align-items:flex-start}.tile-heading .check-input{flex-shrink:0;margin-top:4px}.tile-heading h2{font-size:14px;margin:0;line-height:1.5;min-width:0}.tile-heading .variable-name{font-size:14px}
-.variable-tile .variable-context{font-size:11px;line-height:1.7;margin-top:10px}
-.tile-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin:20px 0}.tile-fields dt{font-size:10px;color:var(--muted);margin-bottom:6px}.tile-fields dd{margin:0;overflow-wrap:anywhere;font-size:12px}.tile-fields .unit-value{font-size:12px}
-.tile-evidence{margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px}.tile-evidence .vote-sub{margin:0;font-size:10px}.tile-details{align-self:flex-start;display:flex;gap:5px;align-items:center;margin-top:16px;font-size:11px}.tile-details .icon{width:14px;height:14px}
+.tile-heading{display:flex;gap:8px;align-items:flex-start}.tile-heading .check-input{flex-shrink:0;margin-top:4px}.tile-heading h2{font-size:12px;margin:0;line-height:1.4;min-width:0}.tile-heading .variable-name{font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.variable-tile .variable-context{font-size:10px;line-height:1.45;margin-top:7px;overflow-wrap:anywhere}
+.tile-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin:12px 0}.tile-fields dt{font-size:10px;color:var(--muted);margin-bottom:4px}.tile-fields dd{margin:0;overflow-wrap:anywhere;font-size:12px}.tile-fields .unit-value{font-size:12px}
+.tile-evidence{margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;gap:5px}.tile-evidence .badge{font-size:10px;white-space:normal;max-width:100%}.tile-evidence .vote-sub{margin:0;font-size:10px}.tile-details{align-self:flex-start;display:flex;gap:5px;align-items:center;margin-top:10px;font-size:11px}.tile-details .icon{width:14px;height:14px}
 .tile-select-page{display:flex;align-items:center;gap:9px;font-size:12px;padding:10px 0}
-@media(max-width:1180px){.list-toolbar{flex-wrap:wrap}.list-toolbar .search-field{flex-basis:100%}.layout-toggle{margin-left:auto}.variable-tile{padding:16px}}
-@media(max-width:700px){.library-table .variable-name{font-size:12px}.library-table th{font-size:10px}.library-table .variable-context{font-size:10px}.library-table .unit-value{font-size:11px}.library-table .badge{font-size:10px}.library-table .vote-sub{font-size:10px}.library-table .check-input{width:17px;height:17px}.library-table .check-col{width:34px}.variable-tiles{grid-template-columns:1fr}.layout-toggle .btn{font-size:11px;min-height:38px}.list-toolbar .sort-select{max-width:170px;flex:1}.variable-tile .badge{font-size:10px}.tile-heading .check-input{width:18px;height:18px}}
+@media(max-width:1180px){.list-toolbar{flex-wrap:wrap}.list-toolbar .search-field{flex-basis:100%}.layout-toggle{margin-left:auto}.variable-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:920px){.variable-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.library-table .variable-name{font-size:12px}.library-table th{font-size:10px}.library-table .variable-context{font-size:10px}.library-table .unit-value{font-size:11px}.library-table .badge{font-size:10px}.library-table .vote-sub{font-size:10px}.library-table .check-input{width:17px;height:17px}.library-table .check-col{width:34px}.layout-toggle .btn{font-size:11px;min-height:38px}.list-toolbar .sort-select{max-width:170px;flex:1}.variable-tile .badge{font-size:10px}.tile-heading .check-input{width:18px;height:18px}}
 .library-grid>section{min-width:0}.library-grid .table-wrap{max-width:100%;overflow-x:auto}
+
+@media(max-width:540px){.variable-tiles{grid-template-columns:1fr}}
