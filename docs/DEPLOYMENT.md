@@ -1,6 +1,10 @@
 # GitHub Pages deployment
 
-This is a static site with relative asset paths and no backend. The prepared package does not create or modify a remote repository. The included workflow deploys from `main`.
+This is a static site with relative asset paths and no backend. The included workflow deploys from `main`.
+
+Repository: [saltysaguaro/agrivoltaics-international-standards](https://github.com/saltysaguaro/agrivoltaics-international-standards).
+
+Pages: [Open the planner](https://saltysaguaro.github.io/agrivoltaics-international-standards/). GitHub Actions publishing was enabled on 2026-10-15; [deployment runs](https://github.com/saltysaguaro/agrivoltaics-international-standards/actions/workflows/pages.yml) show the current status.
 
 ## Before publication
 
@@ -34,7 +38,7 @@ Open **Actions → Test and deploy Pages → Run workflow**, choosing `main`, or
 
 The deploy job has only the required Pages write and OIDC token permissions; the build job has repository read permission. No personal access token belongs in client code or config. Default-branch deployment protection is recommended. Organization policy may require an administrator to approve GitHub Actions/Pages.
 
-Once published, check the real URL on desktop and mobile: setup → shortlist → variable details → plan → export/import. Confirm refresh loading, JSON fetches, resource links, issue drafts, storage persistence, and HTTPS. A live deployment was not performed as part of package preparation.
+Once published, check the real URL on desktop and mobile: setup → shortlist → variable details → plan → export/import. Confirm refresh loading, JSON fetches, resource links, issue drafts, storage persistence, and HTTPS. Future pushes to `main` automatically run tests and deploy successful builds.
 
 ## Configure feedback
 

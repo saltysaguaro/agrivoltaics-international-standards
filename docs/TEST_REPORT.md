@@ -36,4 +36,4 @@ The Pages workflow installs the pinned browser-test dependency and runs the HTTP
 
 ## Limits
 
-No GitHub repository or live Pages deployment was created. Chromium testing does not certify Firefox, Safari, formal screen-reader/WCAG compliance, or scientific validity. The source workbook was not available for a new import; tests audit the supplied derived dataset and importer fixtures. Data redistribution rights remain as documented in `DATA_NOTICE.md`.
+These local test results predate publication. The repository was uploaded and GitHub Actions publishing enabled on 2026-10-15; see the [deployment workflow](https://github.com/saltysaguaro/agrivoltaics-international-standards/actions/workflows/pages.yml) for hosted build and deployment results. Chromium testing does not certify Firefox, Safari, formal screen-reader/WCAG compliance, or scientific validity. The source workbook was not available for a new import; tests audit the supplied derived dataset and importer fixtures. Data redistribution rights remain as documented in `DATA_NOTICE.md`.

@@ -62,7 +62,7 @@ Browser tests use a pinned development-only Playwright installation and run in t
 
 Commit the extracted repository contents, **including `.github/`**, to the `main` branch of a repository. In **Settings → Pages → Build and deployment → Source**, choose **GitHub Actions**. Run the included **Test and deploy Pages** workflow (or push another commit). It tests and publishes only `_site/`.
 
-Use [the deployment guide](docs/DEPLOYMENT.md) for the full procedure, configuration, privacy considerations, and troubleshooting. The demonstration package does not itself create a GitHub repository or live site. Confirm permission to publish the derived research matrix before public deployment.
+Use [the deployment guide](docs/DEPLOYMENT.md) for the full procedure, configuration, privacy considerations, and troubleshooting. This repository publishes the planner through the included Pages workflow. Data licensing and attribution are documented in [DATA_NOTICE.md](DATA_NOTICE.md).
 
 ## Maintain the matrix and resources
 
