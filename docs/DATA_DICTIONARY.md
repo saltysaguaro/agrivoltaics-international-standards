@@ -75,3 +75,7 @@ CSV files use UTF-8 with BOM, CRLF row endings, quote escaping, and a leading ap
 The build publishes only index.html, standards_logo.png, assets, variables.json, classification-audit.csv, license/data notices and .nojekyll. It does not publish the source workbook, developer tests, saved research plans, or the separate editable curation file. Reviewed resources already applied to variables.json are public. The repository itself may expose additional tracked documentation and data; inspect everything before making the repository public.
 
 Legacy `agrifield-measurement-plan` version 1.0 files remain importable. Required metadata is restored on import without overwriting researcher entries; legacy imports also receive the CD/CU defaults. Source dataset schema remains 1.0.0. Measurement-plan CSV includes `required_metadata` separately from the source classification.
+
+## Display labels
+
+`assets/variable-labels.mjs` provides full display names, abbreviations/scientific symbols, and occasional terminology notes, keyed by unchanged variable ID. Original `name` values remain in source data and detail provenance. See [label conventions and references](VARIABLE_LABELS.md). Measurement-plan and observation CSVs append `display_name` and `abbreviation` without changing the existing source-name column or other column positions.

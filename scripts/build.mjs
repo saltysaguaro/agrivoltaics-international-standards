@@ -33,15 +33,16 @@ if(process.argv.includes('--demo')){
   const dataNotice=await readFile(path.join(root,'DATA_NOTICE.md'),'utf8');
   html=html.replace('<html lang="en">', `<html lang="en">\n<!--\n${(license+'\n'+dataNotice).replace(/--/g,'—')}-->`);
   const css=await readFile(path.join(root,'assets/styles.css'),'utf8');
-  const core=(await readFile(path.join(root,'assets/core.mjs'),'utf8')).replace(/^export /gm,'');
-  const app=(await readFile(path.join(root,'assets/app.js'),'utf8')).replace(/^import \{[\s\S]*?\} from '\.\/core\.mjs';\s*/, '');
+  const labels=(await readFile(path.join(root,'assets/variable-labels.mjs'),'utf8')).replace(/^export /gm,'');
+  const core=(await readFile(path.join(root,'assets/core.mjs'),'utf8')).replace(/^import .*from '\.\/variable-labels\.mjs';\s*/m,'').replace(/^export /gm,'');
+  const app=(await readFile(path.join(root,'assets/app.js'),'utf8')).replace(/^import .*from '\.\/(?:core|variable-labels)\.mjs';\s*/gm, '');
   const config=await readFile(path.join(root,'assets/config.js'),'utf8');
   const logo='data:image/png;base64,'+(await readFile(path.join(root,'standards_logo.png'))).toString('base64');
   html=html.replace('<link rel="stylesheet" href="./assets/styles.css">',`<style>${css}</style>`)
     .replace('<script src="./assets/config.js"></script>',`<script>${escapeScript(config)}\nwindow.AIS_LOGO=${JSON.stringify(logo)};document.querySelector('link[rel="icon"]').href=window.AIS_LOGO;\nwindow.AV_DATA=${JSON.stringify(data).replace(/</g,'\\u003c')};</script>`)
     .replace('href="./standards_logo.png"','')
     .replace('src="./standards_logo.png"','')
-    .replace('<script type="module" src="./assets/app.js"></script>',`<script type="module">${escapeScript(core+'\n'+app.replace('href="./standards_logo.png"','')
+    .replace('<script type="module" src="./assets/app.js"></script>',`<script type="module">${escapeScript(labels+'\n'+core+'\n'+app.replace('href="./standards_logo.png"','')
     .replace('src="./standards_logo.png"',''))}</script>`);
   await mkdir(path.join(root,'dist'),{recursive:true});
   await writeFile(path.join(root,'dist/agrivoltaics-standards-demo.html'),html);

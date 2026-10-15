@@ -135,3 +135,31 @@ test('automatic metadata restoration never asserts that new measurements were co
   p.schemaVersion='1.0.0';p.type='agrifield-measurement-plan';
   assert.equal(validatePlan(p,dataset).plan[get('Soil organic carbon').id].status,'planned');
 });
+
+test('display labels remain attached to the exact source records and preserve source data',async()=>{
+  const {VARIABLE_LABELS,variableName,variableAbbreviation}=await import('../assets/variable-labels.mjs');
+  const before=JSON.stringify(dataset);
+  for(const [id,label] of Object.entries(VARIABLE_LABELS)){
+    const v=vars.find(v=>v.id===id);assert.ok(v,`Unknown label ID ${id}`);
+    assert.equal(label.sourceName,v.name);assert.ok(label.name.trim());
+    assert.equal(typeof label.abbreviation,'string');
+  }
+  for(const v of vars){assert.ok(variableName(v));variableAbbreviation(v);}
+  assert.equal(JSON.stringify(dataset),before);
+  assert.equal(variableName(get('CAPEX')),'Capital expenditure');
+  assert.equal(variableAbbreviation(get('CAPEX')),'CAPEX');
+  assert.equal(variableName(get('Photosynthetically active radiation (PAR)')),'Photosynthetically active radiation');
+  assert.equal(variableAbbreviation(get('Air temperature')),'');
+});
+test('full names and abbreviations find the same stable variable',()=>{
+  for(const [source,expanded,abbreviation] of [['CAPEX','capital expenditure','CAPEX'],['Soil EC','soil electrical conductivity','EC'],['Leaf area index','leaf area index','LAI'],['Fv/Fm','maximum quantum yield','Fv/Fm']]){
+    for(const query of [source,expanded,abbreviation]) assert.ok(filterVariables(vars,{query}).some(v=>v.id===get(source).id));
+  }
+});
+test('CSV exports retain source labels alongside display names and abbreviations',()=>{
+  const v=get('CAPEX'),plan={[v.id]:blankEntry()};
+  for(const rows of [planRows(vars,plan,state().study,dataset),measurementRows(vars,plan,state().study)]){
+    const [h,r]=rows;assert.equal(r[h.indexOf('variable')],'CAPEX');assert.equal(r[h.indexOf('display_name')],'Capital expenditure');assert.equal(r[h.indexOf('abbreviation')],'CAPEX');assert.equal(h.length,r.length);
+  }
+  assert.equal(auditRows([v])[1][1],'CAPEX');
+});

@@ -2,6 +2,7 @@
   "checks": [
     "Light setup, PNG branding and 92 defaults load; no extra focus required",
     "Topic/crop workflow produces the reproducible 285-variable shortlist",
+    "Expanded names and abbreviation column; list/tile search, selection, required fields, details, pagination, and responsive layouts",
     "Details show source units, C ambiguity, original votes, and editable sampling fields",
     "Unit ambiguity warnings remain visible; custom units never replace source units",
     "Full-library, priority, review, domain, sort, search and empty-state controls work",

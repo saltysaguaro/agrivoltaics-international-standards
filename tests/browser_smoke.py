@@ -77,6 +77,50 @@ with sync_playwright() as pw:
     page.locator('[data-action="continue"]').click()
     assert page.locator('.result-bar').inner_text().startswith('285 variables')
     passed('Topic/crop workflow produces the reproducible 285-variable shortlist')
+    headers=page.locator('.library-table thead th').all_text_contents()
+    assert headers[1:4]==['Variable','Abbreviation','Unit / format']
+    page.locator('[data-action="scope"][data-scope="all"]').click()
+    page.locator('#variable-search').fill('CAPEX')
+    assert page.locator('.variable-name').inner_text()=='Capital expenditure'
+    assert page.locator('.abbreviation-cell').inner_text()=='CAPEX'
+    checkbox=page.locator('[data-action="toggle-variable"]');was_selected=checkbox.is_checked()
+    page.locator('[data-action="library-layout"][data-layout="tiles"]').click()
+    assert page.locator('.variable-tile').count()==1
+    assert page.locator('[data-layout="tiles"]').get_attribute('aria-pressed')=='true'
+    assert page.locator('[data-action="toggle-variable"]').is_checked()==was_selected
+    page.locator('[data-action="toggle-variable"]').click()
+    page.locator('[data-action="library-layout"][data-layout="list"]').click()
+    assert page.locator('[data-action="toggle-variable"]').is_checked()!=was_selected
+    page.locator('[data-action="toggle-variable"]').click()
+    page.locator('[data-action="library-layout"][data-layout="tiles"]').click()
+    page.locator('#variable-search').fill('Latitude')
+    assert page.locator('.variable-tile [data-action="toggle-variable"]').is_disabled()
+    page.locator('#page-select').click()
+    assert page.locator('.variable-tile [data-action="toggle-variable"]').is_checked()
+    page.locator('#variable-search').fill('Fv/Fm')
+    page.locator('.tile-details').click()
+    assert page.locator('#detail-title').inner_text()=='Maximum quantum yield of photosystem II'
+    assert 'Original variable name: Fv/Fm' in page.locator('.source-meta').inner_text()
+    page.locator('[data-action="close-detail"]').click()
+    page.locator('#variable-search').fill('')
+    page.locator('#page-size').select_option('50')
+    assert page.locator('.variable-tile').count()==50
+    page.locator('[data-action="page"][data-delta="1"]').click()
+    first_id=page.locator('.tile-heading [data-action="toggle-variable"]').first.get_attribute('data-id')
+    page.locator('[data-action="library-layout"][data-layout="list"]').click()
+    assert page.locator('tbody [data-action="toggle-variable"]').first.get_attribute('data-id')==first_id
+    page.locator('[data-action="library-layout"][data-layout="tiles"]').click()
+    for width in [320,390,768,1440]:
+        page.set_viewport_size({'width':width,'height':1080});check_width()
+    page.locator('#page-size').select_option('25')
+    page.locator('[data-action="scope"][data-scope="study"]').click()
+    snap('library-tiles-desktop.png')
+    page.set_viewport_size({'width':390,'height':844});snap('library-tiles-mobile.png')
+    page.set_viewport_size({'width':1440,'height':1080})
+    page.locator('[data-action="library-layout"][data-layout="list"]').click()
+    assert plan_count()==baseline
+    passed('Expanded names and abbreviation column; list/tile search, selection, required fields, details, pagination, and responsive layouts')
+
     find_variable('Air temperature')
     page.locator('[data-action="detail-tab"][data-tab="votes"]').click()
     assert '32 of 37' in page.locator('.evidence-head').inner_text()

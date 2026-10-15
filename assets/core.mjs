@@ -1,3 +1,4 @@
+import { variableName, variableAbbreviation } from './variable-labels.mjs';
 /* Pure planning logic. No DOM, network, or storage access. */
 export const TIERS = {
   CD: { label: 'Core / Descriptive', short: 'Descriptive', rank: 0, tone: 'cd', description: 'Describe the site, system, experimental design, and management context.' },
@@ -100,7 +101,7 @@ export function scopeReasons(v, context) {
 }
 export function scopedVariables(variables,context,all=false) { return all ? variables : variables.filter(v=>scopeReasons(v,context).length); }
 export function searchText(v) {
-  return [v.name,v.category,v.subcategory,v.units.raw,...v.sessions,v.id,v.notes].join(' ').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+  return [variableName(v),variableAbbreviation(v),v.name,v.category,v.subcategory,v.units.raw,...v.sessions,v.id,v.notes].join(' ').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
 }
 export function filterVariables(variables, filters={}) {
   const tokens=String(filters.query || '').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
@@ -116,12 +117,12 @@ export function filterVariables(variables, filters={}) {
 }
 export function sortVariables(variables,sort='priority') {
   return [...variables].sort((a,b)=>{
-    if(sort==='name') return a.name.localeCompare(b.name);
-    if(sort==='votes') return b.consensus.denominator-a.consensus.denominator || a.name.localeCompare(b.name);
-    if(sort==='agreement') return (b.consensus.agreement ?? -1)-(a.consensus.agreement ?? -1) || b.consensus.denominator-a.consensus.denominator || a.name.localeCompare(b.name);
+    if(sort==='name') return variableName(a).localeCompare(variableName(b));
+    if(sort==='votes') return b.consensus.denominator-a.consensus.denominator || variableName(a).localeCompare(variableName(b));
+    if(sort==='agreement') return (b.consensus.agreement ?? -1)-(a.consensus.agreement ?? -1) || b.consensus.denominator-a.consensus.denominator || variableName(a).localeCompare(variableName(b));
     return TIERS[tierKey(a)].rank-TIERS[tierKey(b)].rank ||
       (b.consensus.agreement ?? -1)-(a.consensus.agreement ?? -1) ||
-      b.consensus.denominator-a.consensus.denominator || a.name.localeCompare(b.name);
+      b.consensus.denominator-a.consensus.denominator || variableName(a).localeCompare(variableName(b));
   });
 }
 export function summarize(variables) {
@@ -139,18 +140,18 @@ export function toCSV(rows) {return '\uFEFF'+rows.map(row=>row.map(csvCell).join
 export function blankEntry(mode='design') { return {unitOverride:'',schedule:'',position:'',method:'',notes:'',status:mode==='report'?'collected':'planned'}; }
 export function reportingUnit(v,entry) {return entry?.unitOverride?.trim() || (v.units.status==='provided' ? v.units.raw : '');}
 export function planRows(variables,plan,study,dataset) {
-  const rows=[['study_name','variable_id','variable','category','subcategory','classification','classification_status','majority_code','agreement','non_na_expert_session_cells','CD_votes','CU_votes','C_votes','E_votes','S_votes','unresolved_cells','source_unit_or_format','source_unit_status','source_unit_review_notes','reporting_unit_or_format','unit_origin','collection_status','sampling_schedule','sampling_position','method','researcher_notes','source_sheet','source_row','dataset_version','policy_version','required_metadata']];
+  const rows=[['study_name','variable_id','variable','category','subcategory','classification','classification_status','majority_code','agreement','non_na_expert_session_cells','CD_votes','CU_votes','C_votes','E_votes','S_votes','unresolved_cells','source_unit_or_format','source_unit_status','source_unit_review_notes','reporting_unit_or_format','unit_origin','collection_status','sampling_schedule','sampling_position','method','researcher_notes','source_sheet','source_row','dataset_version','policy_version','required_metadata','display_name','abbreviation']];
   for(const v of sortVariables(variables.filter(v=>plan[v.id]))) {
     const e=plan[v.id],c=v.consensus;
-    rows.push([study.name,v.id,v.name,v.category,v.subcategory,c.category||'',c.status,c.majorityCode||'',c.agreement===null?'':c.agreement,c.denominator,c.counts.CD,c.counts.CU,c.counts.C,c.counts.E,c.counts.S,c.unresolved,v.units.raw,v.units.status,v.units.notes.join(' | '),reportingUnit(v,e),e.unitOverride?'researcher-entered':v.units.status==='provided'?'workbook':'unresolved',e.status,e.schedule,e.position,e.method,e.notes,v.source.sheet,v.source.row,dataset.datasetVersion,dataset.policyVersion,isRequiredVariable(v)]);
+    rows.push([study.name,v.id,v.name,v.category,v.subcategory,c.category||'',c.status,c.majorityCode||'',c.agreement===null?'':c.agreement,c.denominator,c.counts.CD,c.counts.CU,c.counts.C,c.counts.E,c.counts.S,c.unresolved,v.units.raw,v.units.status,v.units.notes.join(' | '),reportingUnit(v,e),e.unitOverride?'researcher-entered':v.units.status==='provided'?'workbook':'unresolved',e.status,e.schedule,e.position,e.method,e.notes,v.source.sheet,v.source.row,dataset.datasetVersion,dataset.policyVersion,isRequiredVariable(v),variableName(v),variableAbbreviation(v)]);
   }
   return rows;
 }
 export function measurementRows(variables,plan,study) {
-  const rows=[['study_name','observation_id','timestamp','time_zone','treatment','replicate','sampling_position','sensor_height_m','soil_depth_cm','variable_id','variable','value','unit_or_format','method','quality_flag','notes']];
+  const rows=[['study_name','observation_id','timestamp','time_zone','treatment','replicate','sampling_position','sensor_height_m','soil_depth_cm','variable_id','variable','value','unit_or_format','method','quality_flag','notes','display_name','abbreviation']];
   for(const v of sortVariables(variables.filter(v=>plan[v.id]))) {
     const e=plan[v.id];
-    rows.push([study.name,'','','','','',e.position,'','',v.id,v.name,'',reportingUnit(v,e),e.method,'','']);
+    rows.push([study.name,'','','','','',e.position,'','',v.id,v.name,'',reportingUnit(v,e),e.method,'','',variableName(v),variableAbbreviation(v)]);
   }
   return rows;
 }

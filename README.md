@@ -9,7 +9,7 @@ A static, browser-based research planner built from all **641 variables** in the
 ## Researcher workflow
 
 1. **Define the study:** choose research focuses, crop groups, and PV configuration. New plans include all 26 CD/CU variables plus required site, study-design, and PV metadata (92 selected records in total; one CD record overlaps the 67 required metadata records). Required records cannot be removed. Mark conditional fields not applicable and explain in their notes.
-2. **Choose variables:** search the full library or study shortlist; filter by domain, subcategory, priority, unit status, and vote evidence. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
+2. **Choose variables:** switch between list and tile views, search by full name or abbreviation in the library or study shortlist, and filter by domain, subcategory, priority, unit status, and vote evidence. Full names and a separate abbreviation column keep labels readable. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
 3. **Review and export:** enter reporting units, sampling schedules, positions, methods, collection status, and notes. Export a measurement-plan CSV, portable JSON plan, or blank observation template; print the plan. JSON can be imported to resume work.
 
 Selections persist locally when browser storage is available. Nothing is uploaded. Feedback prepares a GitHub issue for the user to submit, or downloads Markdown when no repository is configured. No account, analytics, API keys, or external runtime dependencies are required.
