@@ -79,3 +79,7 @@ Legacy `agrifield-measurement-plan` version 1.0 files remain importable. Require
 ## Display labels
 
 `assets/variable-labels.mjs` provides full display names, abbreviations/scientific symbols, and occasional terminology notes, keyed by unchanged variable ID. Original `name` values remain in source data and detail provenance. See [label conventions and references](VARIABLE_LABELS.md). Measurement-plan and observation CSVs append `display_name` and `abbreviation` without changing the existing source-name column or other column positions.
+
+## Combined library priorities
+
+`priorityKey` maps source C/CD/CU classifications to `core`, preserves E and S, and maps unresolved records to R. `summarizePriorities` counts these display groups (271/171/83/116); `summarize` retains the original source-category totals. No source classification or exported audit value is rewritten. The library defaults to domain ordering through `domainCompare`, with field-site metadata and PV specifications first.

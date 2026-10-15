@@ -8,6 +8,15 @@ export const TIERS = {
   S: { label: 'Supplemental', short: 'Supplemental', rank: 4, tone: 's', description: 'Specialized, emerging, or resource-intensive measurements.' },
   R: { label: 'Needs review', short: 'Needs review', rank: 5, tone: 'review', description: 'No unique classification meets the 50% threshold, or no ratings are recorded.' }
 };
+// Combined navigation groups; the original consensus and vote ledger stay intact.
+export const PRIORITIES = {
+  core: {label:'Core',short:'Core',rank:0,tone:'cd',code:'C'},
+  E: {...TIERS.E,rank:1,code:'E'},
+  S: {...TIERS.S,rank:2,code:'S'},
+  R: {...TIERS.R,rank:3,code:'?'}
+};
+export function priorityKey(v){const key=tierKey(v);return ['C','CD','CU'].includes(key)?'core':key;}
+export function summarizePriorities(variables){const counts={core:0,E:0,S:0,R:0};for(const v of variables)counts[priorityKey(v)]++;return counts;}
 export const TOPICS = [
   { id: 'crops', name: 'Crop performance', detail: 'Yield, quality, phenology & management', icon: 'sprout', categories: ['Crops'] },
   { id: 'physiology', name: 'Plant physiology', detail: 'Growth, function & resource use', icon: 'leaf', categories: ['Crops'] },
@@ -109,18 +118,36 @@ export function filterVariables(variables, filters={}) {
     const key=tierKey(v);
     return (!filters.category || v.category===filters.category) &&
       (!filters.subcategory || v.subcategory===filters.subcategory) &&
-      (!filters.tier || (filters.tier==='review' ? !v.consensus.category : key===filters.tier)) &&
+      (!filters.tier || (filters.tier==='core' ? priorityKey(v)==='core' : filters.tier==='review' ? priorityKey(v)==='R' : key===filters.tier)) &&
       (!filters.units || (filters.units==='provided' ? v.units.status==='provided' && !v.units.needsReview : filters.units==='missing' ? v.units.status!=='provided' : v.units.needsReview)) &&
       (!filters.evidence || (filters.evidence==='3plus' ? v.consensus.denominator>=3 : filters.evidence==='limited' ? v.consensus.limitedEvidence : v.consensus.unresolved>0)) &&
       tokens.every(token=>searchText(v).includes(token));
   });
 }
+// Library navigation order; source category and subcategory values remain unchanged.
+const SITE_FIELD_ORDER = ['Country','City','Geographical Location Details','Latitude','Longitude','Climate Classification','Climate zone (short)','Soil Type','Site slope','Prior land use/land use history','Year of System installation','Institution'];
+const SUBCATEGORY_ORDER = {
+  Metadata: ['Metadata','Site Description','System Type','Experimental Set-Up','Agronomy','General','Source','Yield Quality'],
+  'System Specifications': ['Facility Identification','Facility / Land Indicators','Site Geometry','PV Module & Configuration','Module Characteristics','PV Module Geometry','System Geometry','Module Spacing','Optical Properties','Semi-transparent Module Geometry','Tracking Geometry','Electrical & Energy Indicators','Safety','Maintenance','Irrigation','Economic Indicators','Trial / Simulation Position','Opened/closed','General']
+};
+function orderIndex(order,value){const i=order.indexOf(value);return i<0?order.length:i;}
+export function domainCompare(a,b){
+  const domain=orderIndex(CATEGORY_ORDER,a.category)-orderIndex(CATEGORY_ORDER,b.category);
+  if(domain)return domain;
+  if(a.category==='Metadata'){
+    const field=orderIndex(SITE_FIELD_ORDER,a.name)-orderIndex(SITE_FIELD_ORDER,b.name);
+    if(field)return field;
+  }
+  const order=SUBCATEGORY_ORDER[a.category]||[];
+  return orderIndex(order,a.subcategory)-orderIndex(order,b.subcategory) || a.subcategory.localeCompare(b.subcategory) || variableName(a).localeCompare(variableName(b));
+}
 export function sortVariables(variables,sort='priority') {
   return [...variables].sort((a,b)=>{
+    if(sort==='domain') return domainCompare(a,b);
     if(sort==='name') return variableName(a).localeCompare(variableName(b));
     if(sort==='votes') return b.consensus.denominator-a.consensus.denominator || variableName(a).localeCompare(variableName(b));
     if(sort==='agreement') return (b.consensus.agreement ?? -1)-(a.consensus.agreement ?? -1) || b.consensus.denominator-a.consensus.denominator || variableName(a).localeCompare(variableName(b));
-    return TIERS[tierKey(a)].rank-TIERS[tierKey(b)].rank ||
+    return PRIORITIES[priorityKey(a)].rank-PRIORITIES[priorityKey(b)].rank ||
       (b.consensus.agreement ?? -1)-(a.consensus.agreement ?? -1) ||
       b.consensus.denominator-a.consensus.denominator || variableName(a).localeCompare(variableName(b));
   });

@@ -5,6 +5,7 @@
     "Expanded names and abbreviation column; list/tile search, selection, required fields, details, pagination, and responsive layouts",
     "Details show source units, C ambiguity, original votes, and editable sampling fields",
     "Unit ambiguity warnings remain visible; custom units never replace source units",
+    "Field-site/PV domain order, top tabs and keyboard navigation, sidebar priorities, and list/tile domain parity",
     "Full-library, priority, review, domain, sort, search and empty-state controls work",
     "Required metadata cannot be removed individually or with page selection",
     "CSV, JSON and observation-template buttons produce correct, parseable exports",

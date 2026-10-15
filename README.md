@@ -9,7 +9,7 @@ A static, browser-based research planner built from all **641 variables** in the
 ## Researcher workflow
 
 1. **Define the study:** choose research focuses, crop groups, and PV configuration. New plans include all 26 CD/CU variables plus required site, study-design, and PV metadata (92 selected records in total; one CD record overlaps the 67 required metadata records). Required records cannot be removed. Mark conditional fields not applicable and explain in their notes.
-2. **Choose variables:** switch between list and tile views, search by full name or abbreviation in the library or study shortlist, and filter by domain, subcategory, priority, unit status, and vote evidence. Full names and a separate abbreviation column keep labels readable. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
+2. **Choose variables:** switch between list and tile views, search by full name or abbreviation in the library or study shortlist, use the domain tabs above the results and the sidebar filters for priority, subcategory, unit status, and vote evidence. The default order is field-site metadata, PV systems, microclimate, soil, crops, livestock, then biodiversity. Full names and a separate abbreviation column keep labels readable. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
 3. **Review and export:** enter reporting units, sampling schedules, positions, methods, collection status, and notes. Export a measurement-plan CSV, portable JSON plan, or blank observation template; print the plan. JSON can be imported to resume work.
 
 Selections persist locally when browser storage is available. Nothing is uploaded. Feedback prepares a GitHub issue for the user to submit, or downloads Markdown when no repository is configured. No account, analytics, API keys, or external runtime dependencies are required.
@@ -28,7 +28,7 @@ Selections persist locally when browser storage is available. Nothing is uploade
 | No non-NA votes | 27 |
 | **Total** | **641** |
 
-**280** variables have a unique ≥50% CD/CU/E/S vote; **361** need classification review. The source frequently uses an older `C` code. It does not identify which of those votes mean CD or CU. This application does **not** fabricate that distinction.
+The library combines existing C, CU, and CD classifications into **Core (271)**, alongside **Enhanced (171)**, **Supplemental (83)**, and **Needs review (116)**. This is a display/filter grouping: expert votes are not pooled, original classifications remain unchanged, and source C is not assigned a descriptive or universal subtype. The source-level audit retains its original totals: 280 CD/CU/E/S classifications and 361 records without one of those four exact classifications. Saved selections and the 92-variable default plan are unchanged.
 
 Each expert-by-session cell is one voting unit; NA, N/A, and blank cells are ignored. Mixed/conditional non-NA entries remain in the denominator but support no category. A unique category at exactly 50% qualifies; an exact two-way 50/50 split does not. See [the full methodology](docs/METHODOLOGY.md).
 

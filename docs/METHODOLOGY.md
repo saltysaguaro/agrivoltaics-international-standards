@@ -53,9 +53,11 @@ Agreement is `V[winner] / D` when a unique code qualifies. For unresolved rows, 
 
 ## Ranking
 
-The default display order is CD → CU → legacy C → E → S → other review states. Within a tier, sort by agreement descending, non-NA cell count descending, then variable name. This is a navigation order, not a numerical measure of scientific importance. Legacy C appears early to retain its source priority but remains explicitly unresolved. E and S are not described as universally required.
+The library defaults to field-site metadata → PV systems → microclimate → soil → crops → livestock → biodiversity. Within field-site metadata, location and site descriptors precede study setup and other metadata. PV records begin with facility identification and land, then module specifications, geometry, operation, and performance. Other domain subcategories and variable names sort alphabetically. Domain tabs above the results and priority filters in the sidebar apply equally to list and tile views.
 
-Alternative sorts are variable name, evidence count, and agreement. Filtering does not recompute the consensus or silently turn a global vote into a crop-specific vote. Low-agreement rows and unrated variables remain searchable.
+C, CU, and CD are combined into a **Core** display/filter group (271 existing classifications). Enhanced has 171 records, Supplemental 83, and Needs review 116. This group does not pool expert votes or recompute consensus. A record with split C/CD/CU votes and no unique source majority remains unresolved. Source JSON, audit CSV, vote ledgers, and exported source classification fields retain the original distinctions. The original `summarize` helper still reports source-level totals; `summarizePriorities` reports navigation groups.
+
+Alternative sorts are combined priority, variable name, evidence count, and agreement. Priority sorting uses Core → Enhanced → Supplemental → Needs review, then agreement descending, non-NA cell count descending, and full display name. The domain-first order is a navigation choice, not a scientific importance ranking. Filtering does not recompute the consensus or turn a global vote into a crop-specific vote. Saved selections and existing default-plan rules are unchanged; Add Core includes all source C/CD/CU classifications in the current scope.
 
 ## Scope rules and their limits
 

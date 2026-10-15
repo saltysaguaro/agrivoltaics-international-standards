@@ -152,8 +152,28 @@ with sync_playwright() as pw:
     page.locator('[data-action="reset-filters"]').first.click()
     page.locator('[data-action="scope"][data-scope="all"]').click()
     assert '641 variables' in page.locator('.result-bar').inner_text()
-    page.locator('[data-action="tier"][data-tier="CD"]').click();assert page.locator('tbody tr').count()==13
-    page.locator('[data-action="tier"][data-tier="review"]').click();assert page.locator('.result-bar').inner_text().startswith('361 variables')
+    assert page.locator('.priority-strip').count()==0
+    assert page.locator('.filter-panel [data-action="category"]').count()==0
+    assert page.locator('.filter-panel .priority-filter').count()==5
+    assert page.locator('#sort-select').input_value()=='domain'
+    assert page.locator('tbody .variable-name').first.inner_text()=='Country'
+    tabs=page.locator('.domain-tab')
+    assert 'Field-site metadata' in tabs.nth(1).inner_text()
+    assert 'PV systems' in tabs.nth(2).inner_text()
+    tabs.nth(1).click();assert page.locator('.result-bar').inner_text().startswith('86 variables')
+    page.locator('#domain-0').focus();page.keyboard.press('ArrowRight')
+    assert page.locator('#domain-1').get_attribute('aria-selected')=='true'
+    assert page.locator('.result-bar').inner_text().startswith('67 variables')
+    page.locator('[data-action="library-layout"][data-layout="tiles"]').click()
+    assert all('PV systems' in text for text in page.locator('.variable-tile .variable-context').all_text_contents())
+    page.locator('#domain-1').focus();page.keyboard.press('Home')
+    assert page.locator('#domain-all').get_attribute('aria-selected')=='true'
+    assert 'Country' in page.locator('.variable-tile .variable-name').first.inner_text()
+    page.locator('[data-action="library-layout"][data-layout="list"]').click()
+    passed('Field-site/PV domain order, top tabs and keyboard navigation, sidebar priorities, and list/tile domain parity')
+
+    page.locator('.filter-panel [data-action="tier"][data-tier="core"]').click();assert page.locator('.result-bar').inner_text().startswith('271 variables')
+    page.locator('[data-action="tier"][data-tier="R"]').click();assert page.locator('.result-bar').inner_text().startswith('116 variables')
     page.locator('[data-action="reset-filters"]').first.click()
     page.locator('[data-action="category"][data-category="Microclimate"]').click()
     page.locator('#sort-select').select_option('name');snap('library-desktop.png')
@@ -189,7 +209,7 @@ with sync_playwright() as pw:
     page.locator('#plan-file').set_input_files({'name':'restore.json','mimeType':'application/json','buffer':exported.encode()});page.locator('[data-action="confirm"]').click();assert plan_count()==baseline+3
     load();assert plan_count()==baseline+3
     passed('Clear-plan confirmation and saved-study restoration work (test storage adapter in inline mode)')
-    page.locator('.main-nav [data-view="guide"]').click();assert '245' in page.locator('.guide-notice').inner_text();assert page.locator('.guide-card').count()==4
+    page.locator('.main-nav [data-view="guide"]').click();assert '245' in page.locator('.guide-notice').inner_text();assert page.locator('.guide-card').count()==3
     full_audit=captured_download('export-audit');assert len(list(csv.reader(io.StringIO(full_audit.lstrip('\ufeff')))))==642
     passed('Classification guide and complete 641-row audit export are functional')
     page.locator('[data-action="feedback"]').click();page.locator('#feedback-text').fill('Browser smoke test only; no feedback is submitted.')

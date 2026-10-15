@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {isRequiredVariable,requiredPlan,defaultPlan,TIERS,DEFAULT_CONTEXT,normalizeVote,classifyVotes,tierKey,conditionMatches,foundationMatches,scopeReasons,scopedVariables,filterVariables,sortVariables,summarize,csvCell,toCSV,blankEntry,reportingUnit,planRows,measurementRows,auditRows,exportPlan,validatePlan,safeURL} from '../assets/core.mjs';
+import {PRIORITIES,priorityKey,summarizePriorities,CATEGORY_ORDER,isRequiredVariable,requiredPlan,defaultPlan,TIERS,DEFAULT_CONTEXT,normalizeVote,classifyVotes,tierKey,conditionMatches,foundationMatches,scopeReasons,scopedVariables,filterVariables,sortVariables,summarize,csvCell,toCSV,blankEntry,reportingUnit,planRows,measurementRows,auditRows,exportPlan,validatePlan,safeURL} from '../assets/core.mjs';
 const dataset=JSON.parse(await readFile(new URL('../data/variables.json',import.meta.url),'utf8'));
 const vars=dataset.variables, get=name=>{const found=vars.find(v=>v.name===name);assert.ok(found,`Missing fixture ${name}`);return found;};
 const context=(extra={})=>({...structuredClone(DEFAULT_CONTEXT),...extra});
@@ -68,9 +68,9 @@ test('starter rationale is separate from actual vote classification',()=>{
   const wind=get('Wind speed');assert.equal(wind.consensus.status,'no-consensus');assert.ok(scopeReasons(wind,context({topics:['crops']})).includes('Starter checklist'));
 });
 test('search supports multiple tokens and source units',()=>{const found=filterVariables(vars,{query:'soil moisture'});assert.ok(found.length>=3);assert.ok(found.every(v=>/soil/i.test([v.name,v.category,v.notes].join(' '))));assert.ok(filterVariables(vars,{query:'µmol/m²/s'}).length>0);});
-test('review filter includes legacy C; regular categories do not',()=>{assert.equal(filterVariables(vars,{tier:'review'}).length,361);assert.equal(filterVariables(vars,{tier:'C'}).length,245);assert.equal(filterVariables(vars,{tier:'R'}).length,116);});
+test('Core combines source C/CD/CU while Needs review contains unresolved classifications',()=>{assert.equal(filterVariables(vars,{tier:'core'}).length,271);assert.equal(filterVariables(vars,{tier:'review'}).length,116);assert.equal(filterVariables(vars,{tier:'C'}).length,245);assert.equal(filterVariables(vars,{tier:'R'}).length,116);});
 test('filter combinations and empty results behave predictably',()=>{assert.equal(filterVariables(vars,{query:'a-nonexistent-variable-xyz'}).length,0);assert.ok(filterVariables(vars,{category:'Soil',tier:'CU'}).every(v=>v.category==='Soil'&&v.consensus.category==='CU'));});
-test('sort never mutates source ordering and prioritizes tiers explicitly',()=>{const first=vars[0].id,sorted=sortVariables(vars);assert.equal(tierKey(sorted[0]),'CD');assert.equal(vars[0].id,first);for(let i=1;i<sorted.length;i++)assert.ok(TIERS[tierKey(sorted[i])].rank>=TIERS[tierKey(sorted[i-1])].rank);});
+test('sort never mutates source ordering and prioritizes tiers explicitly',()=>{const first=vars[0].id,sorted=sortVariables(vars);assert.equal(priorityKey(sorted[0]),'core');assert.equal(vars[0].id,first);for(let i=1;i<sorted.length;i++)assert.ok(PRIORITIES[priorityKey(sorted[i])].rank>=PRIORITIES[priorityKey(sorted[i-1])].rank);});
 test('unit output never fabricates a missing value',()=>{const v=get('Botanical name');assert.equal(v.units.status,'missing');assert.equal(reportingUnit(v,blankEntry()),'');assert.equal(reportingUnit(v,{...blankEntry(),unitOverride:'Taxon + authority'}),'Taxon + authority');assert.equal(v.units.raw,'NA');});
 test('source energy/capacity mismatch remains visible',()=>{const v=get('Electricity production');assert.equal(v.units.raw,'kWh, kWp');assert.ok(v.units.needsReview);assert.ok(v.units.notes.some(n=>n.includes('mixes energy')));});
 test('CSV escapes commas, quotes, newlines, formulas and unicode safely',()=>{assert.equal(csvCell('a,"b"\nc'),'"a,""b""\nc"');assert.equal(csvCell('=1+1'),'"\'=1+1"');assert.equal(csvCell(' @cmd'),'"\' @cmd"');assert.ok(toCSV([['µmol/m²/s']]).startsWith('\uFEFF'));assert.ok(toCSV([['x']]).endsWith('\r\n'));});
@@ -162,4 +162,20 @@ test('CSV exports retain source labels alongside display names and abbreviations
     const [h,r]=rows;assert.equal(r[h.indexOf('variable')],'CAPEX');assert.equal(r[h.indexOf('display_name')],'Capital expenditure');assert.equal(r[h.indexOf('abbreviation')],'CAPEX');assert.equal(h.length,r.length);
   }
   assert.equal(auditRows([v])[1][1],'CAPEX');
+});
+
+test('combined priorities preserve every source result and do not pool votes',()=>{
+  const before=JSON.stringify(vars);
+  assert.deepEqual(summarizePriorities(vars),{core:271,E:171,S:83,R:116});
+  for(const v of vars){assert.equal(priorityKey(v),['C','CD','CU'].includes(tierKey(v))?'core':tierKey(v));}
+  assert.equal(priorityKey({consensus:classifyVotes(['C','CD','CU','E'])}),'R');
+  assert.equal(JSON.stringify(vars),before);
+});
+test('domain order begins with field-site location, then PV specifications and other domains',()=>{
+  const sorted=sortVariables(vars,'domain');
+  assert.deepEqual(sorted.slice(0,5).map(v=>v.name),['Country','City','Geographical Location Details','Latitude','Longitude']);
+  assert.deepEqual([...new Set(sorted.map(v=>v.category))],CATEGORY_ORDER);
+  const pv=sorted.filter(v=>v.category==='System Specifications');
+  assert.equal(pv[0].subcategory,'Facility Identification');
+  assert.ok(pv.findIndex(v=>v.subcategory==='PV Module & Configuration')<pv.findIndex(v=>v.subcategory==='Electrical & Energy Indicators'));
 });
