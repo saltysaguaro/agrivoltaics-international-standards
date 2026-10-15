@@ -1,0 +1,23 @@
+name: Tool feedback or bug
+description: Report a workflow problem or suggest an improvement.
+title: "[Feedback] "
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened, or what should improve?
+      description: Do not include confidential research data.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce and expected result
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, device, and operating system
+  - type: input
+    id: screen
+    attributes:
+      label: Page or variable ID

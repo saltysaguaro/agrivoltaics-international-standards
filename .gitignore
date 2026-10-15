@@ -1,0 +1,20 @@
+_site/
+node_modules/
+__pycache__/
+.DS_Store
+*.xlsx
+*.xls
+.env*
+!.env.example
+playwright-report/
+test-results/
+
+dist/
+
+.venv/
+test-output/
+
+# Keep private research exports outside the public source tree.
+plans/
+*.plan.json
+*-observations.csv

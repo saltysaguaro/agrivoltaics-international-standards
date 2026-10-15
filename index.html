@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f9fb">
+  <meta name="description" content="Build an agrivoltaic measurement plan from 641 research variables. Explore expert priorities, source units, and transparent classification evidence.">
+  <meta name="referrer" content="no-referrer">
+  <title>Agrivoltaics International Standards</title>
+  <link rel="icon" href="./standards_logo.png" type="image/png">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script src="./assets/config.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="app"><main class="loading"><img class="loading-logo" src="./standards_logo.png" alt="" width="48" height="48"><h1>Agrivoltaics International Standards</h1><p>Loading the research variable library…</p><p class="small">For the repository version, open through a local web server. The standalone demo also works directly from a file.</p></main></div>
+  <noscript><div class="noscript">This interactive planner requires JavaScript. The repository also includes a CSV classification audit.</div></noscript>
+  <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-title"></dialog>
+  <dialog id="utility-dialog" class="utility-dialog" aria-labelledby="utility-title"></dialog>
+  <input id="plan-file" type="file" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
+  <script type="module" src="./assets/app.js"></script>
+</body>
+</html>

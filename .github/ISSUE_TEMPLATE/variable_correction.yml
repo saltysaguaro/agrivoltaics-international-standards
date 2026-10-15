@@ -1,0 +1,47 @@
+name: Variable or scientific-data correction
+description: Propose a source correction, unit clarification, applicability rule, or reviewed resource.
+title: "[Variable] "
+body:
+  - type: markdown
+    attributes:
+      value: "Proposals do not automatically change expert consensus. Do not include confidential study or participant information."
+  - type: input
+    id: variable
+    attributes:
+      label: Variable name and stable ID
+      description: Copy the av- identifier from variable details.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Proposed change
+      options:
+        - Unit or measured-quantity clarification
+        - Expert-vote/source correction
+        - Legacy C subtype review
+        - Topic or crop-group applicability
+        - Reviewed method
+        - Publication
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Current value and proposed correction
+      description: Distinguish a source error from an editorial recommendation.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and scope
+      description: Provide source rows or verified references, unit basis, affected systems/crops and limitations.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Dataset and policy version
+      value: matrix-v15 / conservative-50pct-v1

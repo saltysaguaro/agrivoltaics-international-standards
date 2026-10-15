@@ -1,0 +1,33 @@
+{
+  "variables": 641,
+  "expertSessionColumns": 90,
+  "sessions": 10,
+  "categories": {
+    "Biodiversity": 47,
+    "Crops": 296,
+    "Livestock": 24,
+    "Metadata": 86,
+    "Microclimate": 65,
+    "Soil": 56,
+    "System Specifications": 67
+  },
+  "classifications": {
+    "E": 171,
+    "S": 83,
+    "legacy-core": 245,
+    "no-votes": 27,
+    "tie": 14,
+    "CD": 13,
+    "no-consensus": 75,
+    "CU": 13
+  },
+  "units": {
+    "missing": 339,
+    "provided": 293,
+    "tbd": 9
+  },
+  "unitReview": 383,
+  "unresolvedCells": 113,
+  "nonNaCells": 7641,
+  "limitedEvidenceVariables": 62
+}

@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "Light setup, PNG branding and 92 defaults load; no extra focus required",
+    "Topic/crop workflow produces the reproducible 285-variable shortlist",
+    "Details show source units, C ambiguity, original votes, and editable sampling fields",
+    "Unit ambiguity warnings remain visible; custom units never replace source units",
+    "Full-library, priority, review, domain, sort, search and empty-state controls work",
+    "Required metadata cannot be removed individually or with page selection",
+    "CSV, JSON and observation-template buttons produce correct, parseable exports",
+    "JSON import is confirmed before replacement; invalid IDs leave the plan unchanged",
+    "Clear-plan confirmation and saved-study restoration work (test storage adapter in inline mode)",
+    "Classification guide and complete 641-row audit export are functional",
+    "Unconfigured feedback downloads locally rather than pretending to submit",
+    "390px mobile layout, collapsible filters, detail tabs, focus retention and Escape pass",
+    "320px phone, 768px tablet and 1440px desktop layouts have no horizontal overflow",
+    "Print stylesheet includes sampling details and hides controls",
+    "Privacy erasure removes the study and any stored recovery copy",
+    "No JavaScript errors or external runtime requests"
+  ],
+  "errors": [],
+  "mode": "HTTP",
+  "viewportTests": [
+    320,
+    390,
+    768,
+    1440
+  ]
+}

@@ -1,0 +1,63 @@
+
+> agrivoltaics-international-standards@0.2.0 test
+> node --test tests/*.test.mjs && python3 -m unittest discover -s tests -p 'test_*.py'
+
+✔ NA and blank expert indications are ignored, not treated as supplemental (0.607875ms)
+✔ exactly 50% is accepted when the qualifying category is unique (0.100625ms)
+✔ a 50/50 tie is never broken by category order (0.312916ms)
+✔ a plurality below 50% is not a majority classification (0.121166ms)
+✔ all-NA rows remain unrated (0.099333ms)
+✔ legacy C is not silently mapped to CD or CU (0.067542ms)
+✔ distinct core subtypes are not collapsed to manufacture a subtype vote (0.129083ms)
+✔ one mixed expert cell is unresolved, never two votes (0.047167ms)
+✔ unknown and conditional indications remain in the conservative denominator (0.247ms)
+✔ only documented aliases are normalized (0.2685ms)
+✔ single-cell majorities are visible but limited-evidence flagged (0.098834ms)
+✔ every distributed classification exactly matches its original anonymous cell ledger (7.066667ms)
+✔ all 641 rows and 90 expert-session columns are retained (0.294333ms)
+✔ dataset regression totals match the supplied V15 worksheet (0.309375ms)
+✔ response denominators are not assumed to be independent people (0.112375ms)
+✔ display subcategory cleanup retains exact source spelling (0.032375ms)
+✔ crop filters narrow crop-domain matches without excluding expert-voted core (0.870458ms)
+✔ multiple crop-group matches use OR, not AND (1.076625ms)
+✔ microclimate remains relevant regardless of selected crop-group provenance (0.414125ms)
+✔ configuration filtering is reversible and never changes classifications (0.081125ms)
+✔ cell-geometry exclusion is explicit and does not suppress general module transparency (0.04ms)
+✔ crop metadata in starter checklist is conditional on crop context (0.055709ms)
+✔ starter rationale is separate from actual vote classification (0.040708ms)
+✔ search supports multiple tokens and source units (1.779167ms)
+✔ review filter includes legacy C; regular categories do not (0.201334ms)
+✔ filter combinations and empty results behave predictably (0.889334ms)
+✔ sort never mutates source ordering and prioritizes tiers explicitly (8.222ms)
+✔ unit output never fabricates a missing value (0.072291ms)
+✔ source energy/capacity mismatch remains visible (0.040667ms)
+✔ CSV escapes commas, quotes, newlines, formulas and unicode safely (0.164667ms)
+✔ plan CSV includes source and researcher units separately (0.250666ms)
+✔ observation template does not invent observed values (0.181709ms)
+✔ audit export has all source rows and unresolved statuses (0.338417ms)
+✔ JSON plan round-trip preserves researcher details without mutating the dataset (1.182875ms)
+✔ JSON import rejects unsupported schemas, unknown IDs and oversized text (0.286417ms)
+✔ a source-version mismatch is warned, never silently accepted as unchanged (0.132792ms)
+✔ resource links are restricted to explicit HTTPS (0.041ms)
+✔ collection-stage defaults are explicit and original classifications remain immutable (0.023333ms)
+✔ new plans select every CD/CU and required site/PV field without changing source votes (4.410625ms)
+✔ required metadata stays in the shortlist with topics and starter checklist off (0.355708ms)
+✔ required plan normalization preserves entries and adds missing fields (0.077833ms)
+✔ legacy plans migrate to core defaults and required metadata without losing notes (0.277625ms)
+✔ current plans preserve deliberate core omissions but restore mandatory metadata (0.1185ms)
+✔ import rejects scalar or array containers (0.154125ms)
+✔ CSV distinguishes mandatory metadata from expert classifications (0.432042ms)
+✔ automatic metadata restoration never asserts that new measurements were collected (0.201334ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.171958
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.030s
+
+OK
