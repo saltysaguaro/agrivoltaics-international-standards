@@ -212,10 +212,21 @@ with sync_playwright() as pw:
     page.locator('.main-nav [data-view="guide"]').click();assert '245' in page.locator('.guide-notice').inner_text();assert page.locator('.guide-card').count()==3
     full_audit=captured_download('export-audit');assert len(list(csv.reader(io.StringIO(full_audit.lstrip('\ufeff')))))==642
     passed('Classification guide and complete 641-row audit export are functional')
-    page.locator('[data-action="feedback"]').click();page.locator('#feedback-text').fill('Browser smoke test only; no feedback is submitted.')
+    feedback=page.get_by_role('link',name='Give feedback (opens Google Form in a new tab)',exact=True)
+    assert feedback.get_attribute('href')==page.evaluate('window.AIS_CONFIG.feedbackFormUrl')
+    assert feedback.get_attribute('target')=='_blank'
+    assert 'noopener' in feedback.get_attribute('rel')
+    for width in [320,390,768,1440]:
+        page.set_viewport_size({'width':width,'height':1080});check_width()
+        assert feedback.locator('span').is_visible()
+        assert feedback.bounding_box()['height']>=44
+    passed('Google Form feedback link stays labeled and accessible on phone, tablet and desktop')
+    page.locator('.main-nav [data-view="library"]').click();find_variable('Air temperature')
+    page.locator('[data-action="feedback-variable"]').first.click();page.locator('#feedback-text').fill('Browser smoke test only; no feedback is submitted.')
     page.evaluate('''() => {window.__lastBlob=null; if(!window.__originalCreateObjectURL){window.__originalCreateObjectURL=URL.createObjectURL.bind(URL); URL.createObjectURL=b=>{window.__lastBlob=b;return window.__originalCreateObjectURL(b)};}}''')
     page.locator('#feedback-form button[type="submit"]').click();page.wait_for_function('window.__lastBlob !== null');assert 'Browser smoke test only' in page.evaluate('window.__lastBlob.text()')
-    passed('Unconfigured feedback downloads locally rather than pretending to submit')
+    passed('Variable-specific feedback still downloads locally when no repository is configured')
+    page.locator('[data-action="close-detail"]').click()
     page.set_viewport_size({'width':390,'height':844});page.locator('.main-nav [data-view="setup"]').click();check_width();snap('setup-mobile.png',full=True)
     page.locator('[data-action="continue"]').click();check_width();page.locator('[data-action="mobile-filters"]').click();assert page.locator('.filter-body').is_visible()
     page.locator('[data-action="mobile-filters"]').click();page.locator('#variable-search').fill('Air temperature');page.get_by_role('button',name='Air temperature',exact=True).click();check_width()

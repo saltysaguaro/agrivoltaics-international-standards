@@ -42,7 +42,9 @@ Once published, check the real URL on desktop and mobile: setup → shortlist �
 
 ## Configure feedback
 
-`assets/config.js` contains the public brand and `repositoryUrl`. Leave it null to infer a standard `OWNER.github.io/REPOSITORY/` project site. For a custom domain or nonstandard owner site, set:
+`assets/config.js` contains the public brand, `feedbackFormUrl`, and `repositoryUrl`. The header’s Give feedback button opens the published Google Form configured in `feedbackFormUrl`; it does not attach or upload the local study plan. Keep this a public responder URL, never a form editor URL. The label remains visible on phones.
+
+Variable-specific correction buttons retain the GitHub issue workflow below. Leave `repositoryUrl` null to infer a standard `OWNER.github.io/REPOSITORY/` project site. For a custom domain or nonstandard owner site, set:
 
 ```js
 repositoryUrl: 'https://github.com/OWNER/REPOSITORY'

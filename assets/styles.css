@@ -60,3 +60,13 @@ body:has(dialog[open]){overflow:hidden}dialog{padding:0;color:var(--ink);backgro
 .priority-filters{display:flex;flex-direction:column;gap:5px}.priority-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:8px;border:1px solid transparent;border-radius:6px;background:transparent;text-align:left;font-size:12px;color:var(--ink);min-height:38px}
 .priority-filter.active{background:#edf4f0;border-color:#c4d8ca}.priority-filter .badge{font-size:10px}.priority-filter .filter-count{font-size:11px}
 @media(max-width:700px){.domain-tabs{gap:4px;margin-top:14px}.domain-tab{padding:8px;font-size:11px}.priority-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Keep the feedback invitation visible throughout the planner, including phones. */
+.topbar-actions .feedback-button{min-height:44px;padding:11px 16px;border:1px solid #d7a334;background:#ffdb7a;color:#233729;border-radius:9px;font-size:14px;font-weight:750;line-height:1.3;text-decoration:none;white-space:nowrap;box-shadow:0 2px 6px #49330b18;gap:8px}
+.topbar-actions .feedback-button:hover{background:#f5c958;border-color:#b88620}
+.topbar-actions .feedback-button:focus-visible{outline:3px solid var(--forest);outline-offset:3px}
+.topbar-actions .feedback-button span{display:inline}
+.topbar-actions .feedback-button svg{width:18px;height:18px}
+@media(max-width:540px){.topbar-inner .brand{flex-basis:100%}.topbar-inner .topbar-actions{flex-basis:100%;margin-left:0}.topbar-actions .feedback-button{width:100%;justify-content:center}.topbar-inner{gap:8px}}
+
+@media(max-width:700px){.guide-hero{flex-direction:column;align-items:flex-start}}

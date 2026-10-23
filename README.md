@@ -12,7 +12,7 @@ A static, browser-based research planner built from all **641 variables** in the
 2. **Choose variables:** switch between list and tile views, search by full name or abbreviation in the library or study shortlist, use the domain tabs above the results and the sidebar filters for priority, subcategory, unit status, and vote evidence. The default order is field-site metadata, PV systems, microclimate, soil, crops, livestock, then biodiversity. Full names and a separate abbreviation column keep labels readable. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
 3. **Review and export:** enter reporting units, sampling schedules, positions, methods, collection status, and notes. Export a measurement-plan CSV, portable JSON plan, or blank observation template; print the plan. JSON can be imported to resume work.
 
-Selections persist locally when browser storage is available. Nothing is uploaded. Feedback prepares a GitHub issue for the user to submit, or downloads Markdown when no repository is configured. No account, analytics, API keys, or external runtime dependencies are required.
+Selections persist locally when browser storage is available. Study plans are not uploaded. The prominent Give feedback button opens the project’s Google Form in a new tab for comments, participation requests, missing variables, and research resources. Only information submitted in that form is sent to the project team. Variable-specific corrections still prepare a GitHub issue for the user to submit, or download Markdown when no repository is configured. No account, analytics, API keys, or external runtime dependencies are required.
 
 ## Important data findings
 
