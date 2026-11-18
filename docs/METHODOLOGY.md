@@ -59,7 +59,13 @@ C, CU, and CD are combined into a **Core** display/filter group (271 existing cl
 
 Alternative sorts are combined priority, variable name, evidence count, and agreement. Priority sorting uses Core → Enhanced → Supplemental → Needs review, then agreement descending, non-NA cell count descending, and full display name. The domain-first order is a navigation choice, not a scientific importance ranking. Filtering does not recompute the consensus or turn a global vote into a crop-specific vote. Saved selections and existing default-plan rules are unchanged; Add Core includes all source C/CD/CU classifications in the current scope.
 
-## Scope rules and their limits
+## Library and shortlist
+
+The application opens on the full 641-variable library. The left tab always shows the full library; the right tab shows only selected plan variables, including the standard defaults below. Search, domains, priorities, subcategories, units and evidence filters refine either tab. Study data stays in memory for this visit and is reset on reload or a new visit. JSON export/import is the explicit way to resume work.
+
+### Legacy scope rules
+
+The removed study planner used the following scope rules. They remain documented for older JSON plan context and the pure data helpers; they no longer determine the shortlist.
 
 The eight study focuses are a navigation layer over seven original categories:
 
@@ -82,9 +88,9 @@ All exact expert-voted CD/CU variables are included across focuses, subject to e
 
 Required site/PV metadata always stays in the shortlist, including tracking and cell-geometry specifications. Mark these fields not applicable when appropriate, with a reason in their notes. Configuration filters apply only to optional variables. Unspecified configurations keep everything available. The full library bypasses these scope rules. Changing study scope does not delete already-selected variables.
 
-## Starter checklist
+## Legacy starter checklist
 
-An optional **32-variable editorial checklist** maps examples in the supplied classification framework to existing matrix records: site coordinates/climate, system geometry/technology/capacity, study design, crop identity/management, and basic measurements. The exact mapping is `FOUNDATION` in `scripts/import_matrix.py`. Crop-context suggestions require crop, physiology, or livestock research or a crop-group selection. Configuration exclusions still apply.
+The former optional **32-variable editorial checklist** maps examples in the supplied classification framework to existing matrix records: site coordinates/climate, system geometry/technology/capacity, study design, crop identity/management, and basic measurements. The exact mapping is `FOUNDATION` in `scripts/import_matrix.py`. Crop-context suggestions require crop, physiology, or livestock research or a crop-group selection. Configuration exclusions still apply.
 
 This is separate from expert classification. A starter marker never converts C into CD/CU, never changes a vote count, and never inserts a variable missing from the workbook. Researchers choose optional suggestions. Planner requirements below are maintained separately from these suggestions and from expert classifications.
 
@@ -113,4 +119,4 @@ New plans start with all 13 CD and 13 CU variables selected, plus 67 required me
 
 Required records remain selected across topic/configuration filters, individual and bulk removal, clearing optional variables, imports and reloads. Conditional fields remain visible so researchers can explicitly report non-applicability. Required means inclusion in the measurement plan, not a claim that measurements are complete or validated. Draft exports remain available before values or methods are known.
 
-The optional starter toggle only affects additional suggestions. Neither requirements nor defaults relabel expert votes. CSV exports carry a separate `required_metadata` column. Legacy version 1.0 plans are migrated to the defaults while preserving all existing entries. Version 1.1 plans retain deliberate CD/CU omissions and restore any missing required metadata.
+Starter controls and markers have been removed from the interface; the underlying source annotations remain available for provenance and required-metadata rules. Neither requirements nor defaults relabel expert votes. CSV exports carry a separate `required_metadata` column. Legacy version 1.0 plans are migrated to the defaults while preserving all existing entries. Version 1.1 plans retain deliberate CD/CU omissions and restore any missing required metadata.

@@ -38,7 +38,7 @@ Open **Actions → Test and deploy Pages → Run workflow**, choosing `main`, or
 
 The deploy job has only the required Pages write and OIDC token permissions; the build job has repository read permission. No personal access token belongs in client code or config. Default-branch deployment protection is recommended. Organization policy may require an administrator to approve GitHub Actions/Pages.
 
-Once published, check the real URL on desktop and mobile: setup → shortlist → variable details → plan → export/import. Confirm refresh loading, JSON fetches, resource links, issue drafts, storage persistence, and HTTPS. Future pushes to `main` automatically run tests and deploy successful builds.
+Once published, check the real URL on desktop and mobile: full library → selected shortlist → variable details → Research Plan → export/import. Confirm refresh loading, JSON fetches, resource links, issue drafts, fresh state after reload, and HTTPS. Future pushes to `main` automatically run tests and deploy successful builds.
 
 ## Configure feedback
 
@@ -62,7 +62,7 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory _site
 
 Any static HTTPS host serving the contents of `_site` can host the tool. No rewrite rule or root-relative base path is required because navigation is in-page and assets are relative. Preserve the `assets` and `data` directories; serve `.js`/`.mjs` with JavaScript-compatible MIME types and JSON correctly.
 
-`npm run demo` additionally creates `dist/agrivoltaics-standards-demo.html`, a self-contained evaluation copy. It has no external runtime requests. Browser policies may restrict persistence for directly opened files; the app warns when storage is unavailable. JSON export is the portable backup.
+`npm run demo` additionally creates `dist/agrivoltaics-standards-demo.html`, a self-contained evaluation copy. It has no external runtime requests. Plans remain in memory only, including in the standalone demo. JSON export is the portable backup.
 
 ## Troubleshooting
 
@@ -74,7 +74,7 @@ Any static HTTPS host serving the contents of `_site` can host the tool. No rewr
 
 **Tests fail after a matrix change:** inspect the audit. Tests deliberately encode v15 counts and fixtures so new data requires deliberate review and expected-result updates. Do not remove failing assertions merely to publish.
 
-**Plans missing on another domain/browser:** local storage belongs to the browser/site and is not a synchronized account. Export JSON before moving hosts and import it at the new host.
+**Plan reset after a reload or a new visit:** expected. No study data is saved in browser storage. Export with Save & share plan · JSON before leaving, then use Import plan to resume.
 
 **No resource links:** expected until scientifically reviewed entries are supplied in the curation overlay and the dataset is reimported.
 

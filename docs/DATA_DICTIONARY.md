@@ -45,7 +45,7 @@ For every variable, `sum(counts) + unresolved = denominator`, and `denominator +
 
 Plan files have `type: "agrivoltaics-standards-plan"`, `schemaVersion: "1.1.0"`, datasetVersion, sourceSha256, policyVersion, exportedAt, study, context, and plan.
 
-`study` holds name and notes. `context` holds topic and crop-group IDs, PV configuration, optional cell geometry, design/report mode, and starter-toggle state. `plan` maps variable IDs to these fields:
+`study` holds name and notes. `context` holds topic and crop-group IDs, PV configuration, optional cell geometry, design/report mode, and starter-toggle state for compatibility with previously exported plans. These legacy context fields no longer determine the library shortlist, which contains only selected variables. `plan` maps variable IDs to these fields:
 
 | Field | Meaning |
 | --- | --- |

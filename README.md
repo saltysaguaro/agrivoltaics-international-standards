@@ -8,11 +8,11 @@ A static, browser-based research planner built from all **641 variables** in the
 
 ## Researcher workflow
 
-1. **Define the study:** choose research focuses, crop groups, and PV configuration. New plans include all 26 CD/CU variables plus required site, study-design, and PV metadata (92 selected records in total; one CD record overlaps the 67 required metadata records). Required records cannot be removed. Mark conditional fields not applicable and explain in their notes.
-2. **Choose variables:** switch between list and tile views, search by full name or abbreviation in the library or study shortlist, use the domain tabs above the results and the sidebar filters for priority, subcategory, unit status, and vote evidence. The default order is field-site metadata, PV systems, microclimate, soil, crops, livestock, then biodiversity. Full names and a separate abbreviation column keep labels readable. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
+1. **Browse the full library:** open directly to all 641 variables. New plans include all 26 CD/CU variables plus required site, study-design, and PV metadata (92 selected records in total; one CD record overlaps the 67 required metadata records). Required records cannot be removed. Mark conditional fields not applicable and explain in their notes.
+2. **Choose variables:** switch between list and tile views, search by full name or abbreviation in the full library (left tab) or selected-variable study shortlist (right tab), use the domain tabs above the results and the sidebar filters for priority, subcategory, unit status, and vote evidence. The default order is field-site metadata, PV systems, microclimate, soil, crops, livestock, then biodiversity. Full names and a separate abbreviation column keep labels readable. Open any variable for original units, source notes, the full anonymous vote ledger, and method/publication slots.
 3. **Review and export:** enter reporting units, sampling schedules, positions, methods, collection status, and notes. Export a measurement-plan CSV, portable JSON plan, or blank observation template; print the plan. JSON can be imported to resume work.
 
-Selections persist locally when browser storage is available. Study plans are not uploaded. The prominent Give feedback button opens the project’s Google Form in a new tab for comments, participation requests, missing variables, and research resources. Only information submitted in that form is sent to the project team. Variable-specific corrections still prepare a GitHub issue for the user to submit, or download Markdown when no repository is configured. No account, analytics, API keys, or external runtime dependencies are required.
+Study details and selections stay in memory for the current visit only. Reloading or revisiting starts a fresh plan with the standard defaults; no study data or filters are saved in browser storage. Export **Save & share plan · JSON** and use **Import plan** to resume a study. Legacy browser-saved plans are removed on load. Study plans are not uploaded. The prominent Give feedback button opens the project’s Google Form in a new tab for comments, participation requests, missing variables, and research resources. Only information submitted in that form is sent to the project team. Variable-specific corrections still prepare a GitHub issue for the user to submit, or download Markdown when no repository is configured. No account, analytics, API keys, or external runtime dependencies are required.
 
 ## Important data findings
 
@@ -81,7 +81,7 @@ Reviewed methods and publications belong in `data/curation.json`, keyed by stabl
 
 ```text
 index.html                     Accessible application shell
-assets/app.js                  UI, interaction, persistence, feedback
+assets/app.js                  UI, interaction, session state, feedback
 assets/core.mjs                Pure classification, filtering, ranking, export logic
 assets/styles.css              Responsive screen and print styles
 assets/config.js                Brand and optional repository URL

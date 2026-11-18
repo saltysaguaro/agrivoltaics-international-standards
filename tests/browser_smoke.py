@@ -38,6 +38,8 @@ with sync_playwright() as pw:
     page.on('request',lambda r:requests.append(r.url))
     def load():
         if args.inline:
+            # Match an HTTP visit to the root, rather than retaining the prior route.
+            page.evaluate("history.replaceState(null,'','#library')")
             html=(ROOT/'dist/agrivoltaics-standards-demo.html').read_text()
             page.set_content(html.replace('<head>','<head>'+STORE,1),wait_until='networkidle')
         else:page.goto(args.url,wait_until='networkidle')
@@ -48,7 +50,7 @@ with sync_playwright() as pw:
             page.evaluate("document.getElementById('toast').classList.remove('show')")
             page.wait_for_timeout(350)
             page.screenshot(path=str(args.screenshots/name),full_page=full)
-    def check_width():assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Horizontal overflow'
+    def check_width():assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), page.evaluate("() => ({view:location.hash,width:innerWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).map(e=>e.tagName+'.'+e.className).slice(0,12)})")
     def find_variable(name):
         page.locator('#variable-search').fill(name)
         page.get_by_role('button',name=name,exact=True).click()
@@ -60,23 +62,23 @@ with sync_playwright() as pw:
         page.wait_for_function('window.__lastBlob !== null')
         return page.evaluate('window.__lastBlob.text()')
     page.emulate_media(color_scheme='dark')
-    load();assert page.locator('[data-action="continue"]').is_enabled();
+    load()
     baseline=92;required=67
     assert plan_count()==baseline
     assert page.locator('.brand-name').inner_text()=='Agrivoltaics International Standards'
     assert page.locator('.brand-caption, .hero-stats').count()==0
     assert page.locator('.brand-logo').evaluate('(img) => img.complete && img.naturalWidth > 0')
-    assert page.locator('.setup-main .panel').first.evaluate('(el) => getComputedStyle(el).backgroundColor')=='rgb(255, 255, 255)'
-    check_width();snap('setup-desktop.png',full=True)
-    passed('Light setup, PNG branding and 92 defaults load; no extra focus required')
-    page.locator('[data-action="topic"][data-id="crops"]').click()
-    assert page.evaluate("document.activeElement.dataset.id")=='crops'
-    page.locator('[data-action="topic"][data-id="microclimate"]').click()
-    page.locator('[data-action="crop"][data-group="Field Crops"]').click()
-    page.locator('#study-name').fill('Canopy light study')
-    page.locator('[data-action="continue"]').click()
-    assert page.locator('.result-bar').inner_text().startswith('285 variables')
-    passed('Topic/crop workflow produces the reproducible 285-variable shortlist')
+    assert page.locator('.filter-panel').evaluate('(el) => getComputedStyle(el).backgroundColor')=='rgb(255, 255, 255)'
+    check_width();snap('library-landing-desktop.png',full=True)
+    assert page.locator('h1').inner_text()=='Variable library'
+    assert page.locator('.main-nav [data-view="setup"], .steps, [data-action="add-foundation"], .foundation-mark').count()==0
+    assert page.locator('.main-nav [data-view="plan"]').inner_text().startswith('Research Plan')
+    assert page.locator('.scope-toggle button').first.get_attribute('data-scope')=='all'
+    assert page.locator('.scope-toggle button').last.get_attribute('data-scope')=='study'
+    assert page.locator('.result-bar').inner_text().startswith('641 variables')
+    page.locator('[data-action="scope"][data-scope="study"]').click()
+    assert page.locator('.result-bar').inner_text().startswith(f'{baseline} variables')
+    passed('Full library landing, simplified navigation, and selected-only shortlist with retained defaults')
     headers=page.locator('.library-table thead th').all_text_contents()
     assert headers[1:4]==['Variable','Abbreviation','Unit / format']
     page.locator('[data-action="scope"][data-scope="all"]').click()
@@ -89,9 +91,15 @@ with sync_playwright() as pw:
     assert page.locator('[data-layout="tiles"]').get_attribute('aria-pressed')=='true'
     assert page.locator('[data-action="toggle-variable"]').is_checked()==was_selected
     page.locator('[data-action="toggle-variable"]').click()
+    page.locator('[data-action="scope"][data-scope="study"]').click()
+    assert page.locator('.variable-tile').count()==1
+    assert plan_count()==baseline+1
+    assert page.locator('.scope-toggle [data-scope="study"] .count').inner_text()==str(baseline+1)
     page.locator('[data-action="library-layout"][data-layout="list"]').click()
     assert page.locator('[data-action="toggle-variable"]').is_checked()!=was_selected
     page.locator('[data-action="toggle-variable"]').click()
+    assert page.locator('.variable-tile, .library-table tbody tr').count()==0
+    page.locator('[data-action="scope"][data-scope="all"]').click()
     page.locator('[data-action="library-layout"][data-layout="tiles"]').click()
     page.locator('#variable-search').fill('Latitude')
     assert page.locator('.variable-tile [data-action="toggle-variable"]').is_disabled()
@@ -121,6 +129,7 @@ with sync_playwright() as pw:
     assert plan_count()==baseline
     passed('Expanded names and abbreviation column; list/tile search, selection, required fields, details, pagination, and responsive layouts')
 
+    page.locator('[data-action="scope"][data-scope="all"]').click()
     find_variable('Air temperature')
     page.locator('[data-action="detail-tab"][data-tab="votes"]').click()
     assert '32 of 37' in page.locator('.evidence-head').inner_text()
@@ -188,6 +197,7 @@ with sync_playwright() as pw:
     assert plan_count()==baseline+3
     passed('Required metadata cannot be removed individually or with page selection')
     page.locator('.main-nav [data-view="plan"]').click();assert page.locator('.plan-stats strong').first.inner_text()==str(baseline+3);check_width()
+    page.locator('#plan-study-name').fill('Canopy light study')
     csv_text=captured_download('export-csv');rows=list(csv.DictReader(io.StringIO(csv_text.lstrip('\ufeff'))));assert len(rows)==baseline+3
     air=next(row for row in rows if row['variable']=='Air temperature');assert air['source_unit_or_format']=='°C';assert air['method']=='Shielded, calibrated sensor'
     energy=next(row for row in rows if row['variable']=='Electricity production');assert energy['source_unit_or_format']=='kWh, kWp';assert energy['reporting_unit_or_format']=='kWh'
@@ -207,8 +217,20 @@ with sync_playwright() as pw:
     assert page.locator('#entry-notes').input_value()=='Required site coordinates'
     page.locator('[data-action="close-detail"]').click()
     page.locator('#plan-file').set_input_files({'name':'restore.json','mimeType':'application/json','buffer':exported.encode()});page.locator('[data-action="confirm"]').click();assert plan_count()==baseline+3
-    load();assert plan_count()==baseline+3
-    passed('Clear-plan confirmation and saved-study restoration work (test storage adapter in inline mode)')
+    # Old persisted plans and recovery copies must be removed, never restored.
+    page.evaluate("""payload => {const key='agrifield:plan:v1:'+location.pathname.replace(/\/[^/]*\.html$/,'/');localStorage.setItem(key,payload);localStorage.setItem(key+':recovery',payload);localStorage.setItem(key+':probe','1');}""",exported)
+    load();assert plan_count()==baseline
+    assert page.locator('h1').inner_text()=='Variable library'
+    assert page.locator('#variable-search').input_value()==''
+    assert page.locator('.scope-toggle [data-scope="all"]').get_attribute('aria-pressed')=='true'
+    assert page.evaluate("!Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).some(k=>k.startsWith('agrifield:plan:v1:'))")
+    page.locator('.main-nav [data-view="plan"]').click()
+    assert page.locator('#plan-study-name').input_value()==''
+    page.locator('#plan-file').set_input_files({'name':'restore.json','mimeType':'application/json','buffer':exported.encode()})
+    page.locator('[data-action="confirm"]').click()
+    assert plan_count()==baseline+3
+    assert page.locator('#plan-study-name').input_value()=='Canopy light study'
+    passed('Fresh visits clear previous study data and legacy storage; JSON explicitly restores a plan')
     page.locator('.main-nav [data-view="guide"]').click();assert '245' in page.locator('.guide-notice').inner_text();assert page.locator('.guide-card').count()==3
     full_audit=captured_download('export-audit');assert len(list(csv.reader(io.StringIO(full_audit.lstrip('\ufeff')))))==642
     passed('Classification guide and complete 641-row audit export are functional')
@@ -227,24 +249,37 @@ with sync_playwright() as pw:
     page.locator('#feedback-form button[type="submit"]').click();page.wait_for_function('window.__lastBlob !== null');assert 'Browser smoke test only' in page.evaluate('window.__lastBlob.text()')
     passed('Variable-specific feedback still downloads locally when no repository is configured')
     page.locator('[data-action="close-detail"]').click()
-    page.set_viewport_size({'width':390,'height':844});page.locator('.main-nav [data-view="setup"]').click();check_width();snap('setup-mobile.png',full=True)
-    page.locator('[data-action="continue"]').click();check_width();page.locator('[data-action="mobile-filters"]').click();assert page.locator('.filter-body').is_visible()
+    page.set_viewport_size({'width':390,'height':844});page.locator('.main-nav [data-view="library"]').click();check_width();snap('library-landing-mobile.png',full=True)
+    check_width();page.locator('[data-action="mobile-filters"]').click();assert page.locator('.filter-body').is_visible()
     page.locator('[data-action="mobile-filters"]').click();page.locator('#variable-search').fill('Air temperature');page.get_by_role('button',name='Air temperature',exact=True).click();check_width()
     page.locator('#tab-overview').focus();page.keyboard.press('ArrowRight');assert page.locator('#tab-votes').get_attribute('aria-selected')=='true'
     page.keyboard.press('Escape');assert not page.locator('#detail-dialog').is_visible()
     page.locator('#variable-search').fill('');snap('library-mobile.png',full=True)
     page.locator('.main-nav [data-view="plan"]').click();check_width();snap('plan-mobile.png',full=True)
     passed('390px mobile layout, collapsible filters, detail tabs, focus retention and Escape pass')
-    page.set_viewport_size({'width':768,'height':1024});check_width();page.locator('.main-nav [data-view="setup"]').click();check_width()
+    page.set_viewport_size({'width':768,'height':1024});check_width();page.locator('.main-nav [data-view="library"]').click();check_width()
     page.set_viewport_size({'width':320,'height':740});check_width()
     page.locator('.main-nav [data-view="plan"]').click();check_width()
     passed('320px phone, 768px tablet and 1440px desktop layouts have no horizontal overflow')
     page.locator('.main-nav [data-view="plan"]').click();page.emulate_media(media='print');assert not page.locator('.export-panel').is_visible();assert page.locator('.print-only').is_visible();page.emulate_media(media='screen')
     passed('Print stylesheet includes sampling details and hides controls')
-    page.evaluate("""() => {const key=Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).find(k=>k.startsWith('agrifield:plan:v1:')&&!k.endsWith(':recovery')); if(key)localStorage.setItem(key+':recovery','test recovery copy');}""")
-    page.locator('[data-action="privacy"]').click();page.locator('[data-action="erase-storage"]').click();page.locator('[data-action="confirm"]').click();assert plan_count()==baseline
-    assert page.evaluate("!Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).some(k=>k.startsWith('agrifield:plan:v1:'))")
-    passed('Privacy erasure removes the study and any stored recovery copy')
+    page.locator('[data-action="privacy"]').click()
+    assert 'stay in memory for this visit only' in page.locator('.utility-content').inner_text()
+    assert page.locator('[data-action="erase-storage"]').count()==0
+    page.locator('[data-action="close-utility"]').first.click()
+    assert page.evaluate('localStorage.length')==0
+    passed('Edits, imports and exports never persist study data; privacy text explains the session lifetime')
+    if not args.inline:
+        page.reload(wait_until='networkidle')
+        assert plan_count()==baseline
+        assert page.locator('#plan-study-name').input_value()==''
+        page.goto(args.url+'/#setup',wait_until='networkidle')
+        assert page.locator('h1').inner_text()=='Variable library'
+        page.goto(args.url+'/#unknown',wait_until='networkidle')
+        assert page.locator('h1').inner_text()=='Variable library'
+        page.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw new Error('Storage blocked')}})")
+        load();assert plan_count()==baseline
+        passed('Reload resets the plan, old and invalid routes open the library, and blocked storage is supported')
     assert not errors,errors
     if args.inline:assert not [u for u in requests if u.startswith(('http:','https:'))],requests
     else:assert all(u.startswith(args.url) or u.startswith(('blob:','data:')) for u in requests),requests
