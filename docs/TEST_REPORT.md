@@ -33,7 +33,7 @@ python tests/browser_smoke.py --url http://127.0.0.1:8000 --screenshots test-out
 python tests/browser_smoke.py --inline
 ```
 
-The Pages workflow installs the pinned browser-test dependency and runs the HTTP browser suite against the built public site before deployment. The application has no runtime dependencies. Inline mode uses a test-only storage adapter; HTTP mode verifies that study data is not persisted. The adapter is never shipped.
+The Pages build job uses Ubuntu 24.04 because pinned Playwright 1.60.0 does not support the Ubuntu 26.04 runner. The Pages workflow installs the pinned browser-test dependency and runs the HTTP browser suite against the built public site before deployment. The application has no runtime dependencies. Inline mode uses a test-only storage adapter; HTTP mode verifies that study data is not persisted. The adapter is never shipped.
 
 ## Limits
 
